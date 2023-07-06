@@ -18,11 +18,13 @@ module RailsPDF
     end
 
     def render(&block)
-      controller = ActionController::Base.new
-      view = ActionView::Base.new(ActionController::Base.view_paths, {}, controller)
-      params = { file: @file, layout: @layout }
+      # controller = ActionController::Base.new
+      # view = ActionView::Base.new(ActionController::Base.view_paths, {}, controller)
+      params = { template: @file, layout: @layout }
       params = params.merge(locals: @locals) if @locals.present?
-      content = view.render(params)
+      # content = view.render(params)
+
+      content = ApplicationController.render(params)
 
       logger.debug "RailsPDF ====="
       logger.debug "RailsPDF content:\n#{content}"
@@ -35,7 +37,7 @@ module RailsPDF
         input.write(content)
         input.flush
 
-        command = "#{RailsPDF.relaxed} #{input.path.to_s} #{output.path.to_s} --basedir / --build-once"
+        command = "#{RailsPDF.relaxed} #{input.path.to_s} #{output.path.to_s} --build-once --no-sandbox --basedir /"
 
         logger.debug "RailsPDF ===== #{command}"
 

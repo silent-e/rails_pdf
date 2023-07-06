@@ -17,7 +17,7 @@ module RailsPDF
 
   def RailsPDF.relaxed
     @@relaxed ||= begin 
-      result = `which relaxed`.strip
+      result = (`which ./node_modules/.bin/relaxed`.presence || `which relaxed`).strip
       raise "RelaxedJS is not installed. Check https://github.com/igorkasyanchuk/rails_pdf#install-relaxedjs" if result.blank?
       result
     end
